@@ -203,13 +203,16 @@ function init() {
 	var sky = new Sky(skyX, skyY, skyWidth, skyHeight);
 	canvasEls.push(sky);
 
-	// var sun = new Sun(canvas.width/3*2, canvas.height*2/3, canvas.width/6);
-	// canvasEls.push(sun);
+	var sunRadius = scale + (Math.round(Math.random() * 10)),
+		sunX = canvas.width * Math.random();
+		sunY = canvas.height - sunRadius;
+
+	var sun = new Sun(sunX, sunY, sunRadius);
+	canvasEls.push(sun);
 
 	var riverWidth = canvas.width, 
-		riverHeight = scale + (Math.round(Math.random() * 10));
-
-	var riverX = 0, 
+		riverHeight = scale + (Math.round(Math.random() * 10)),
+		riverX = 0, 
 		riverY = canvas.height - riverHeight;
 
 	var river = new River(riverX, riverY, riverWidth, riverHeight);
