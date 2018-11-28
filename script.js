@@ -90,19 +90,43 @@ Mountain.prototype.update = function() {
 }
 
 function Sky(x, y, width, height) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+}
+
+Sky.prototype.draw = function() {
+    ctx.fillStyle = '#9FCCF3';
+    ctx.fillRect(this.x, this.y, this.width, this.height);
+}
+
+Sky.prototype.update = function() {
+    this.draw();
+}
+
+function Night(x, y, width, height) {
 	this.x = x;
 	this.y = y;
 	this.width = width;
 	this.height = height;
+    this.radians = 0;
+    this.velocity = 0.005;
+    this.opacity = 0;
 }
 
-Sky.prototype.draw = function() {
-	ctx.fillStyle = '#9FCCF3';
+Night.prototype.draw = function() {
+	ctx.fillStyle = `rgba(0, 0, 0, ${this.opacity})`;
 	ctx.fillRect(this.x, this.y, this.width, this.height);
 }
 
-Sky.prototype.update = function() {
-	this.draw();
+Night.prototype.update = function() {
+    // this.radians += this.velocity;
+
+    // this.opacity = (-Math.sin(this.radians));
+    // console.log(this.opacity);
+
+    this.draw();
 }
 
 function Sun(x, y, radius) {
@@ -121,9 +145,10 @@ function Sun(x, y, radius) {
 	}
 
 	this.update = function() {
-		this.radians += this.velocity;
+		// this.radians += this.velocity;
 
-		this.y = y - (Math.sin(this.radians) * scale*2);
+		// this.y = y - (Math.sin(this.radians) * scale*2);
+        // console.log(this.y);
 
 		this.draw();
 	}
@@ -254,6 +279,14 @@ function init() {
 
 		treeX += scale;
 	}
+
+    var nightX = 0,
+        nightY = 0,
+        nightWidth = canvas.width,
+        nightHeight = canvas.height;
+
+    var night = new Night(nightX, nightY, nightWidth, nightHeight);
+    canvasEls.push(night);
 
 	for (var i = 0; i < canvasEls.length; i++) {
 		canvasEls[i].draw();
