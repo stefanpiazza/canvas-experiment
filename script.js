@@ -48,7 +48,7 @@ Tree.prototype.draw = function() {
     ctx.lineTo(this.x + this.width/2, this.y - this.height);
     ctx.lineTo(this.x + this.width/2, this.y);
     ctx.lineTo(this.x + this.width, this.y);
-    
+
     ctx.fillStyle = this.colors[1]
     ctx.fill();
 }
@@ -80,7 +80,7 @@ Mountain.prototype.draw = function() {
     ctx.lineTo(this.x + this.width/2, this.y - this.height);
     ctx.lineTo(this.x + this.width/2, this.y);
     ctx.lineTo(this.x + this.width, this.y);
-    
+
     ctx.fillStyle = this.colors[1];
     ctx.fill();
 }
@@ -110,7 +110,7 @@ function Sun(x, y, radius) {
 	this.y = y;
 	this.radius = radius
 	this.radians = 0;
-	this.velocity = 0.01;
+	this.velocity = 0.005;
 
 	this.draw = function() {
 		ctx.beginPath();
@@ -121,10 +121,9 @@ function Sun(x, y, radius) {
 	}
 
 	this.update = function() {
-		// this.radians += this.velocity;
-		
-		// this.x = x + (Math.cos(this.radians) * this.radius*2) - this.radius*2;
-		// this.y = y + (Math.sin(this.radians) * this.radius*2);
+		this.radians += this.velocity;
+
+		this.y = y - (Math.sin(this.radians) * scale*2);
 
 		this.draw();
 	}
@@ -182,7 +181,7 @@ window.addEventListener('resize', () => {
 	scale = baseScale;
 
 	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;	
+	canvas.height = window.innerHeight;
 
 	init();
 });
@@ -195,9 +194,9 @@ window.addEventListener('mousemove', (e) => {
 function init() {
 	canvasEls = [];
 
-	var skyX = 0, 
-		skyY = 0, 
-		skyWidth = canvas.width, 
+	var skyX = 0,
+		skyY = 0,
+		skyWidth = canvas.width,
 		skyHeight = canvas.height;
 
 	var sky = new Sky(skyX, skyY, skyWidth, skyHeight);
@@ -210,17 +209,17 @@ function init() {
 	var sun = new Sun(sunX, sunY, sunRadius);
 	canvasEls.push(sun);
 
-	var riverWidth = canvas.width, 
+	var riverWidth = canvas.width,
 		riverHeight = scale + (Math.round(Math.random() * 10)),
-		riverX = 0, 
+		riverX = 0,
 		riverY = canvas.height - riverHeight;
 
 	var river = new River(riverX, riverY, riverWidth, riverHeight);
 	canvasEls.push(river);
 
-	var mountainX = -scale, 
-		mountainY, 
-		mountainWidth, 
+	var mountainX = -scale,
+		mountainY,
+		mountainWidth,
 		mountainHeight;
 
 	for (var i = 0; i < canvas.width/scale; i++) {
@@ -237,9 +236,9 @@ function init() {
 		mountainX += scale;
 	}
 
-	var treeX = -scale, 
-		treeY, 
-		treeWidth, 
+	var treeX = -scale,
+		treeY,
+		treeWidth,
 		treeHeight;
 
 	for (var i = 0; i < canvas.width/scale; i++) {
