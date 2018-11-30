@@ -121,10 +121,23 @@ Night.prototype.draw = function() {
 }
 
 Night.prototype.update = function() {
-    // this.radians += this.velocity;
+    this.radians += this.velocity;
 
-    // this.opacity = (-Math.sin(this.radians));
-    // console.log(this.opacity);
+	if (Math.sin(this.radians) >= 0) {
+		if (this.opacity >= 0) {
+			this.opacity -= 0.005;
+		}
+	}
+
+	else {
+		if (this.opacity <= 0.6) {
+			this.opacity += 0.005;
+		}
+	}
+
+	// if (Math.sin(this.radians) < -0.6) {
+	// 	this.radians = -0.6;
+	// }
 
     this.draw();
 }
@@ -145,10 +158,14 @@ function Sun(x, y, radius) {
 	}
 
 	this.update = function() {
-		// this.radians += this.velocity;
+		this.radians += this.velocity;
 
-		// this.y = y - (Math.sin(this.radians) * scale*2);
-        // console.log(this.y);
+		this.y = y - (Math.sin(this.radians) * scale*2);
+		this.x = x - (Math.cos(this.radians) * scale*2);
+
+		// if (Math.sin(this.radians) < -0.6) {
+		// 	this.radians = -0.6;
+		// }
 
 		this.draw();
 	}
@@ -168,6 +185,51 @@ River.prototype.draw = function() {
 
 River.prototype.update = function() {
 	this.draw();
+}
+
+function Star(x, y, width, height, colors) {
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
+	this.colors = colors;
+	this.radians = 0;
+	this.velocity = 0.005;
+	this.opacity = 0;
+}
+
+Star.prototype.draw = function() {
+	ctx.beginPath();
+    ctx.moveTo(this.x, this.y);
+    ctx.lineTo(this.x + this.width/2, this.y - this.height);
+    ctx.lineTo(this.x + this.width, this.y);
+    ctx.lineTo(this.x + this.width/2, this.y + this.height);
+    ctx.lineTo(this.x, this.y);
+
+    ctx.fillStyle = `rgba(${this.colors[0]}, ${this.opacity})`;
+    ctx.fill();
+}
+
+Star.prototype.update = function() {
+    this.radians += this.velocity;
+
+	if (Math.sin(this.radians) >= 0) {
+		if (this.opacity >= 0) {
+			this.opacity -= 0.005;
+		}
+	}
+
+	else {
+		if (this.opacity <= 1) {
+			this.opacity += 0.005;
+		}
+	}
+
+	// if (Math.sin(this.radians) < -0.6) {
+	// 	this.radians = -0.6;
+	// }
+
+    this.draw();
 }
 
 var canvas = document.querySelector('#canvas');
@@ -192,7 +254,7 @@ var treeColors = [
 	'#167F39',
 	'#45BF55',
 	'#97ED8A'
-]
+];
 
 var mountainColors = [
 	'#2C2E21',
@@ -200,7 +262,11 @@ var mountainColors = [
 	'#F9DAA4',
 	'#C8B281',
 	'#8C7F58'
-]
+];
+
+var starColors = [
+	'236, 240, 241'
+];
 
 window.addEventListener('resize', () => {
 	scale = baseScale;
@@ -287,6 +353,25 @@ function init() {
 
     var night = new Night(nightX, nightY, nightWidth, nightHeight);
     canvasEls.push(night);
+
+    var starX,
+    	starY,
+    	starWidth,
+    	starHeight;
+
+    for (var i = 0; i < canvas.width/scale; i++) {
+    	for (var j = 0; j < canvas.height/scale/2; j++) {
+	    	starY = (j * scale) + (Math.random()*scale);
+	    	starX = (i * scale) + (Math.random()*scale);
+	    	starWidth = scale/10 * (Math.random()*2 + 0.05),
+	    	starHeight = starWidth;
+
+		    var star = new Star(starX, starY, starWidth, starHeight, [
+		    	starColors[Math.floor(Math.random() * starColors.length)]
+	    	]);
+		    canvasEls.push(star);
+    	}
+    }
 
 	for (var i = 0; i < canvasEls.length; i++) {
 		canvasEls[i].draw();
